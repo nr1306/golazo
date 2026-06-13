@@ -1,0 +1,27 @@
+{
+  "rivalries": [
+    {"team_a": "Mexico",    "team_b": "USA",       "score": 30, "label": "El Trafico"},
+    {"team_a": "Mexico",    "team_b": "Argentina", "score": 25, "label": "Classic Clash"},
+    {"team_a": "Brazil",    "team_b": "Argentina", "score": 40, "label": "El Superclasico"},
+    {"team_a": "England",   "team_b": "Germany",   "score": 35, "label": "Classic Rivalry"},
+    {"team_a": "England",   "team_b": "France",    "score": 30, "label": "The Channel Derby"},
+    {"team_a": "Spain",     "team_b": "Portugal",  "score": 28, "label": "Iberian Derby"},
+    {"team_a": "Germany",   "team_b": "Netherlands","score": 30, "label": "Der Klassiker International"},
+    {"team_a": "Italy",     "team_b": "France",    "score": 25, "label": "Mediterranean Clash"},
+    {"team_a": "Japan",     "team_b": "South Korea","score": 28, "label": "East Asian Derby"},
+    {"team_a": "Brazil",    "team_b": "France",    "score": 25, "label": "Finals Rivalry"},
+    {"team_a": "USA",       "team_b": "Canada",    "score": 20, "label": "CONCACAF Derby"},
+    {"team_a": "Morocco",   "team_b": "Senegal",   "score": 22, "label": "African Cup Clash"},
+    {"team_a": "Colombia",  "team_b": "Argentina", "score": 24, "label": "South American Rivals"},
+    {"team_a": "Portugal",  "team_b": "France",    "score": 26, "label": "Euro Semifinal Ghosts"},
+    {"team_a": "Belgium",   "team_b": "Netherlands","score": 28, "label": "Low Countries Derby"}
+  ],
+  "stage_bonuses": {
+    "Group Stage":  0,
+    "Round of 32":  5,
+    "Round of 16": 10,
+    "Quarterfinal": 15,
+    "Semifinal":   20,
+    "Final":       25
+  }
+}

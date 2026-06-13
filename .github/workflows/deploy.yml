@@ -1,0 +1,61 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+env:
+  BACKEND_IMAGE: gcr.io/${{ secrets.GOOGLE_CLOUD_PROJECT }}/golazo-api
+  REGION: us-central1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: cd backend && pip install -r requirements.txt && pytest tests/ -v
+
+  build-deploy-backend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Build + push image
+        run: |
+          gcloud builds submit \
+            --tag gcr.io/${{ secrets.GOOGLE_CLOUD_PROJECT }}/golazo-api \
+            ./backend
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy golazo-api \
+            --image gcr.io/${{ secrets.GOOGLE_CLOUD_PROJECT }}/golazo-api \
+            --region $REGION \
+            --allow-unauthenticated \
+            --min-instances 1
+
+  deploy-frontend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build Next.js static export
+        run: |
+          cd frontend
+          npm ci
+          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} npm run build
+      - name: Deploy to Firebase Hosting
+        run: |
+          npm install -g firebase-tools
+          firebase deploy --only hosting \
+            --token ${{ secrets.FIREBASE_TOKEN }} \
+            --project ${{ secrets.GOOGLE_CLOUD_PROJECT }}

@@ -1,0 +1,51 @@
+# Environment
+.env
+.env.local
+backend/.env
+frontend/.env.local
+service-account.json
+*.json.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/tsconfig.tsbuildinfo
+frontend/next-env.d.ts
+
+# Build artifacts
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Firebase
+.firebase/
+
+# Python virtual envs (project-local)
+golazovenv/
+
+# Claude Code artifacts
+.claude/
+graphify-out/
+stitch_golazo_world_cup_command_center/
+CLAUDE.md
+AUDIT.md
+TASKS.md
