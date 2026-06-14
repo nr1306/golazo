@@ -38,7 +38,7 @@ export default function FloatingChat({ fanId, onFanIdChange, prefillMessage, aut
     <>
       {/* Slide-in drawer — always mounted to preserve chat history */}
       <div
-        className={`fixed right-0 top-0 h-full w-[420px] z-50 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 top-0 h-full w-full md:w-[420px] z-50 flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -80,7 +80,7 @@ export default function FloatingChat({ fanId, onFanIdChange, prefillMessage, aut
       {/* Floating bubble — hidden while drawer is open */}
       <button
         onClick={handleOpen}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-pitch-green shadow-glow-green flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 ${isOpen ? "hidden" : ""}`}
+        className={`fixed bottom-20 md:bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-pitch-green shadow-glow-green flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 ${isOpen ? "hidden" : ""}`}
         aria-label="Open chat"
       >
         <svg

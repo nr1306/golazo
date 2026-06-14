@@ -68,7 +68,7 @@ export default function RightPanel({ fanId }: RightPanelProps) {
   }
 
   return (
-    <aside className="w-72 flex flex-col glass border-l border-white/10 shrink-0 overflow-y-auto">
+    <aside className="hidden md:flex w-72 flex-col glass border-l border-white/10 shrink-0 overflow-y-auto">
       {/* Agent Actions */}
       <section className="px-4 pt-5 pb-4 border-b border-white/10">
         <div className="flex items-center gap-2 mb-3">

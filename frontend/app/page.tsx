@@ -6,6 +6,7 @@ import RightPanel from "../components/RightPanel"
 import MatchesView from "../components/MatchesView"
 import FloatingChat from "../components/FloatingChat"
 import NavSidebar from "../components/NavSidebar"
+import MobileNav from "../components/MobileNav"
 
 export default function Home() {
   const [fanId, setFanId] = useState<string | null>(null)
@@ -56,13 +57,14 @@ export default function Home() {
         </div>
 
         {/* Match list */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden pb-16 md:pb-0">
           <MatchesView />
         </div>
       </div>
 
       <RightPanel fanId={fanId} />
       <FloatingChat fanId={fanId} onFanIdChange={setFanId} />
+      <MobileNav />
     </div>
   )
 }

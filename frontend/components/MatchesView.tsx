@@ -74,18 +74,18 @@ function MatchRow({ match, onClick }: { match: MatchItem; onClick: () => void })
   return (
     <div
       onClick={onClick}
-      className="glass-elevated rounded-xl px-4 py-3 flex items-center gap-4 cursor-pointer transition-all accent-border-green hover:bg-white/5 hover:border-white/15 hover:shadow-glow-green/10"
+      className="glass-elevated rounded-xl px-4 py-3 flex items-center gap-3 cursor-pointer transition-all accent-border-green hover:bg-white/5 hover:border-white/15 hover:shadow-glow-green/10"
     >
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-display font-bold text-on-surface">
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-sm font-display font-bold text-on-surface leading-snug">
             {match.team_a} <span className="text-on-surface/30 font-normal">vs</span> {match.team_b}
           </p>
           <span className={`text-[9px] font-mono uppercase tracking-widest shrink-0 ${statusColor}`}>
             {match.status}
           </span>
         </div>
-        <p className="text-[10px] font-mono text-on-surface/40 mt-0.5">
+        <p className="text-[10px] font-mono text-on-surface/40 mt-0.5 truncate">
           {match.date.slice(0, 10)} &middot; {match.kickoff_local} &middot; {match.city} &middot; {match.stage}
         </p>
       </div>
