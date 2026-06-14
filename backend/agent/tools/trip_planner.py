@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timezone
 
 from db import get_db
+from agent.tools.memory import _embed
 
 
 async def save_trip_itinerary(fan_id: str, legs: list) -> dict:
@@ -48,7 +49,6 @@ async def discover_by_vibe(vibe_query: str, top_k: int = 5) -> dict:
     Returns:
         {"venues": [{"stadium": str, "city": str, "vibe_tags": [...], "fan_zones": [...]}]}
     """
-    from agent.tools.memory import _embed
     db = get_db()
 
     embedding = await _embed(vibe_query)
