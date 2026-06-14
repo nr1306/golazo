@@ -23,11 +23,9 @@ from db import get_db
 
 app = FastAPI(title="Golazo API")
 
-_FIREBASE_ORIGIN = os.getenv("FIREBASE_ORIGIN", "https://golazo-XXXX.web.app")
-_LOCAL_ORIGINS = [f"http://localhost:{p}" for p in range(3000, 3010)]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[_FIREBASE_ORIGIN] + _LOCAL_ORIGINS,
+    allow_origins=["*"],
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
