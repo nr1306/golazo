@@ -7,13 +7,30 @@ import MatchesView from "../components/MatchesView"
 import FloatingChat from "../components/FloatingChat"
 import NavSidebar from "../components/NavSidebar"
 import MobileNav from "../components/MobileNav"
+import SplashScreen from "../components/SplashScreen"
+import OnboardingTour from "../components/OnboardingTour"
 
 export default function Home() {
   const [fanId, setFanId] = useState<string | null>(null)
+  const [showSplash, setShowSplash] = useState(false)
+  const [showTour, setShowTour] = useState(false)
 
   useEffect(() => {
     setFanId(getFanId())
+    if (!localStorage.getItem("golazo_visited")) {
+      setShowSplash(true)
+    }
   }, [])
+
+  function handleSplashDone() {
+    setShowSplash(false)
+    setShowTour(true)
+  }
+
+  function handleTourDone() {
+    setShowTour(false)
+    localStorage.setItem("golazo_visited", "1")
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -65,6 +82,8 @@ export default function Home() {
       <RightPanel fanId={fanId} />
       <FloatingChat fanId={fanId} onFanIdChange={setFanId} />
       <MobileNav />
+      {showSplash && <SplashScreen onDone={handleSplashDone} />}
+      {showTour && <OnboardingTour onDone={handleTourDone} />}
     </div>
   )
 }
