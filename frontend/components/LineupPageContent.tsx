@@ -7,7 +7,6 @@ import LineupView from "./LineupView"
 import FloatingChat from "./FloatingChat"
 import { getFanId } from "../lib/session"
 import NavSidebar from "./NavSidebar"
-import MobileNav from "./MobileNav"
 
 function SkeletonCard() {
   return (
@@ -102,7 +101,7 @@ export default function LineupPageContent() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto max-w-3xl mx-auto w-full px-4 py-6 pb-24 md:pb-6">
+      <main className="flex-1 overflow-y-auto max-w-3xl mx-auto w-full px-4 py-6">
         {loading && (
           <div className="space-y-4">
             <SkeletonCard />
@@ -129,7 +128,6 @@ export default function LineupPageContent() {
       </main>
 
       <FloatingChat fanId={fanId} onFanIdChange={setFanId} />
-      <MobileNav />
       </div>
     </div>
   )

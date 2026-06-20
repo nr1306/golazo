@@ -87,9 +87,8 @@ function MatchRow({ match, onClick }: { match: MatchItem; onClick: () => void })
         </div>
         <p className="text-[10px] font-mono text-on-surface/40 mt-0.5 truncate">
           {match.date.slice(0, 10)} &middot; {match.kickoff_local} &middot; {match.city}
-          <span className="hidden md:inline"> &middot; {match.stage}</span>
         </p>
-        <p className="text-[10px] font-mono text-on-surface/30 mt-0.5 md:hidden truncate">
+        <p className="text-[9px] font-mono text-on-surface/25 mt-0.5 truncate md:hidden">
           {match.stage}
         </p>
       </div>

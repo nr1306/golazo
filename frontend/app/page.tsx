@@ -82,7 +82,8 @@ export default function Home() {
       <RightPanel fanId={fanId} />
       <FloatingChat fanId={fanId} onFanIdChange={setFanId} />
       <MobileNav />
-      {showSplash && <SplashScreen onDone={handleSplashDone} />}
+
+      {showSplash && <SplashScreen onEnter={handleSplashDone} />}
       {showTour && <OnboardingTour onDone={handleTourDone} />}
     </div>
   )

@@ -15,7 +15,6 @@ import {
 import { getFanId } from "../lib/session"
 import FloatingChat from "./FloatingChat"
 import NavSidebar from "./NavSidebar"
-import MobileNav from "./MobileNav"
 
 function deriveCheckinCheckout(matchDate: string): { checkin: string; checkout: string } {
   const d = new Date(matchDate.slice(0, 10))
@@ -181,7 +180,7 @@ export default function MatchPageContent() {
       </header>
 
       {/* Body */}
-      <main className="flex-1 overflow-y-auto max-w-7xl mx-auto w-full px-6 py-8 pb-24 md:pb-8">
+      <main className="flex-1 overflow-y-auto max-w-7xl mx-auto w-full px-6 py-8">
 
         {/* Lineup CTA banner */}
         {match && (
@@ -395,7 +394,6 @@ export default function MatchPageContent() {
         prefillMessage={prefillMessage}
         autoOpen={chatOpen}
       />
-      <MobileNav />
       </div>
     </div>
   )

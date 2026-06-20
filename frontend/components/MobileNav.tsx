@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
-import { Suspense } from "react"
+import { usePathname } from "next/navigation"
 
 const NAV_ITEMS = [
   {
@@ -18,8 +17,8 @@ const NAV_ITEMS = [
   },
   {
     key: "match",
-    label: "Hotels",
-    hrefParam: "match",
+    label: "Guide",
+    href: "/match",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -30,7 +29,7 @@ const NAV_ITEMS = [
   {
     key: "lineup",
     label: "Lineup",
-    hrefParam: "lineup",
+    href: "/lineup",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
@@ -41,36 +40,19 @@ const NAV_ITEMS = [
   },
 ]
 
-function MobileNavInner() {
+export default function MobileNav() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const matchId = searchParams.get("id")
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-white/10 flex items-stretch h-16">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden glass border-t border-white/10 flex items-stretch h-16 pb-safe">
       {NAV_ITEMS.map((item) => {
-        const isActive = item.key === "dashboard" ? pathname === "/" : pathname === `/${item.key}`
-        const href = item.href ?? (matchId ? `/${item.hrefParam}/?id=${matchId}` : null)
-        const disabled = !href
-
-        if (disabled) {
-          return (
-            <div
-              key={item.key}
-              className="flex-1 flex flex-col items-center justify-center gap-1 text-on-surface/20 select-none"
-            >
-              {item.icon}
-              <span className="text-[9px] font-mono uppercase tracking-widest">{item.label}</span>
-            </div>
-          )
-        }
-
+        const isActive = pathname === item.href || (item.key !== "dashboard" && pathname.startsWith(item.href))
         return (
           <Link
             key={item.key}
-            href={href}
+            href={item.href}
             className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${
-              isActive ? "text-pitch-green" : "text-on-surface/40 hover:text-on-surface/70"
+              isActive ? "text-pitch-green" : "text-on-surface/35"
             }`}
           >
             {item.icon}
@@ -79,13 +61,5 @@ function MobileNavInner() {
         )
       })}
     </nav>
-  )
-}
-
-export default function MobileNav() {
-  return (
-    <Suspense fallback={null}>
-      <MobileNavInner />
-    </Suspense>
   )
 }

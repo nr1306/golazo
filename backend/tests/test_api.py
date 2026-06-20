@@ -25,10 +25,8 @@ def client():
 
         mock_col = MagicMock()
         mock_col.find.return_value.sort.return_value.to_list = AsyncMock(return_value=[])
-        mock_col.find.return_value.to_list = AsyncMock(return_value=[])
         mock_col.find_one = AsyncMock(return_value=None)
         mock_col.update_one = AsyncMock(return_value=MagicMock(matched_count=1))
-        mock_col.insert_one = AsyncMock(return_value=MagicMock())
         mock_db.return_value = MagicMock(
             pending_actions=mock_col,
             trips=mock_col,
