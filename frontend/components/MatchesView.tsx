@@ -61,15 +61,19 @@ export default function MatchesView() {
 }
 
 function MatchRow({ match, onClick }: { match: MatchItem; onClick: () => void }) {
-  const score = match.atmosphere_score
-  const scoreColor =
-    score >= 80 ? "text-pitch-green" : score >= 60 ? "text-trophy-gold" : "text-on-surface/40"
+  const atmScore = match.atmosphere_score
+  const atmColor =
+    atmScore >= 80 ? "text-pitch-green" : atmScore >= 60 ? "text-trophy-gold" : "text-on-surface/40"
   const statusColor =
-    match.status === "finished"
+    match.status === "finished" || match.status === "completed"
       ? "text-energy-red"
       : match.status === "live"
       ? "text-pitch-green animate-pulse"
       : "text-on-surface/30"
+
+  const isFinished = match.status === "completed" || match.status === "finished"
+  const hasScore = isFinished && match.score_a !== null && match.score_a !== undefined
+                             && match.score_b !== null && match.score_b !== undefined
 
   return (
     <div
@@ -79,10 +83,18 @@ function MatchRow({ match, onClick }: { match: MatchItem; onClick: () => void })
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <p className="text-sm font-display font-bold text-on-surface leading-snug">
-            {match.team_a} <span className="text-on-surface/30 font-normal">vs</span> {match.team_b}
+            {match.team_a}{" "}
+            {hasScore ? (
+              <span className="text-pitch-green font-black tabular-nums">
+                {match.score_a}–{match.score_b}
+              </span>
+            ) : (
+              <span className="text-on-surface/30 font-normal">vs</span>
+            )}{" "}
+            {match.team_b}
           </p>
           <span className={`text-[9px] font-mono uppercase tracking-widest shrink-0 ${statusColor}`}>
-            {match.status}
+            {isFinished ? "FT" : match.status}
           </span>
         </div>
         <p className="text-[10px] font-mono text-on-surface/40 mt-0.5 truncate">
@@ -93,7 +105,7 @@ function MatchRow({ match, onClick }: { match: MatchItem; onClick: () => void })
         </p>
       </div>
       <div className="text-right shrink-0">
-        <p className={`text-lg font-display font-black ${scoreColor}`}>{score}</p>
+        <p className={`text-lg font-display font-black ${atmColor}`}>{atmScore}</p>
         <p className="text-[9px] font-mono text-on-surface/20 uppercase tracking-widest">atm</p>
       </div>
       <span className="text-on-surface/20 font-mono text-sm shrink-0">→</span>

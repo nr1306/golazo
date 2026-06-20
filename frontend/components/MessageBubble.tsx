@@ -26,6 +26,10 @@ function toMatchCardProps(m: any) {
     stadium: m.stadium,
     atmosphereScore: m.atmosphere?.score ?? m.atmosphere_score ?? 70,
     country: m.country || "",
+    status: m.status,
+    scoreA: m.score_a ?? null,
+    scoreB: m.score_b ?? null,
+    winner: m.winner ?? null,
   }
 }
 
@@ -84,7 +88,7 @@ export default function MessageBubble({ message }: { message: Message }) {
     <div className={`flex flex-col gap-2 ${isUser ? "items-end" : "items-start"}`}>
       {message.content && (
         <div
-          className={`max-w-[82%] px-4 py-3 ${
+          className={`max-w-[82%] min-w-0 px-4 py-3 break-words ${
             isUser
               ? "bg-pitch-green text-stadium-navy font-medium text-sm leading-relaxed rounded-2xl rounded-br-none shadow-glow-green"
               : "glass-elevated rounded-2xl rounded-bl-none"

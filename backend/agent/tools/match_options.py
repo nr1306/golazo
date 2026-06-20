@@ -3,6 +3,7 @@ import json
 import os
 
 from openai import AsyncOpenAI
+import litellm
 
 
 def _make_city_guide_fallback(city: str, stadium: str, fan_zones: list) -> dict:

@@ -1,4 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Upgrade to HTTPS when page is served over HTTPS — Safari strictly blocks mixed content
+function resolveApiUrl() {
+  const raw = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && raw.startsWith("http:")) {
+    return raw.replace("http:", "https:")
+  }
+  return raw
+}
+
+const API_URL = resolveApiUrl()
 
 export type SSEEvent =
   | { type: "token";       content: string }
@@ -101,6 +110,9 @@ export interface MatchItem {
   stadium: string
   status: string
   atmosphere_score: number
+  score_a?: number | null
+  score_b?: number | null
+  winner?: string | null
 }
 
 export interface AtmosphereRanking {
@@ -142,7 +154,7 @@ export async function fetchMatches(params?: {
   if (params?.city) qs.set("city", params.city)
   if (params?.stage) qs.set("stage", params.stage)
   if (params?.limit) qs.set("limit", String(params.limit))
-  const res = await fetch(`${API_URL}/matches?${qs}`)
+  const res = await fetch(`${API_URL}/matches?${qs}`, { cache: "no-store" })
   if (!res.ok) throw new Error(`Failed to fetch matches: ${res.status}`)
   return res.json() as Promise<{ matches: MatchItem[] }>
 }

@@ -17,8 +17,12 @@ export default function Home() {
 
   useEffect(() => {
     setFanId(getFanId())
-    if (!localStorage.getItem("golazo_visited")) {
-      setShowSplash(true)
+    try {
+      if (!localStorage.getItem("golazo_visited")) {
+        setShowSplash(true)
+      }
+    } catch {
+      // Safari private mode blocks localStorage — skip splash/tour
     }
   }, [])
 
@@ -29,7 +33,7 @@ export default function Home() {
 
   function handleTourDone() {
     setShowTour(false)
-    localStorage.setItem("golazo_visited", "1")
+    try { localStorage.setItem("golazo_visited", "1") } catch { /* private mode */ }
   }
 
   return (

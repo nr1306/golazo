@@ -20,6 +20,7 @@ from agent.tools.crowd import get_crowd_insights
 from agent.tools.match_options import generate_match_options
 from agent.tools.players import get_fantasy_roster, search_players
 from db import get_db
+from scores import sync_scores_from_espn
 
 app = FastAPI(title="Golazo API")
 
@@ -29,6 +30,29 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
+
+async def _score_sync_loop() -> None:
+    """Background task: sync WC2026 scores from ESPN every 30 minutes."""
+    while True:
+        await asyncio.sleep(30 * 60)
+        try:
+            result = await sync_scores_from_espn()
+            if result["updated"]:
+                print(f"[score-sync] {result['updated']} matches updated: {result['matches']}")
+        except Exception as exc:
+            print(f"[score-sync] error (non-fatal): {exc}")
+
+
+@app.on_event("startup")
+async def startup_sync_scores():
+    """Sync scores immediately on startup, then keep refreshing every 30 min."""
+    try:
+        result = await sync_scores_from_espn()
+        print(f"[startup] Score sync: {result['updated']} updated, {result['checked']} completed matches checked")
+    except Exception as exc:
+        print(f"[startup] Score sync failed (non-fatal): {exc}")
+    asyncio.create_task(_score_sync_loop())
+
 
 # ---------- session tracking ----------
 _created_sessions: set[str] = set()
@@ -285,7 +309,8 @@ async def list_matches(
     raw = await db.matches.find(
         query,
         {"_id": 1, "match_number": 1, "stage": 1, "team_a": 1, "team_b": 1,
-         "date": 1, "kickoff_local": 1, "city": 1, "stadium": 1, "status": 1, "atmosphere": 1},
+         "date": 1, "kickoff_local": 1, "city": 1, "stadium": 1, "status": 1,
+         "atmosphere": 1, "score_a": 1, "score_b": 1, "winner": 1},
     ).sort("date", 1).limit(limit).to_list(limit)
 
     def _fmt(m: dict) -> dict:
@@ -302,6 +327,9 @@ async def list_matches(
             "stadium": m.get("stadium"),
             "status": m.get("status", "scheduled"),
             "atmosphere_score": (m.get("atmosphere") or {}).get("score", 0),
+            "score_a": m.get("score_a"),
+            "score_b": m.get("score_b"),
+            "winner": m.get("winner"),
         }
 
     return {"matches": [_fmt(m) for m in raw]}
@@ -531,6 +559,9 @@ async def match_detail(match_id: str):
         "stadium": match.get("stadium"),
         "status": match.get("status", "scheduled"),
         "atmosphere_score": (match.get("atmosphere") or {}).get("score", match.get("atmosphere_score", 0)),
+        "score_a": match.get("score_a"),
+        "score_b": match.get("score_b"),
+        "winner": match.get("winner"),
     }
 
     venue = await db.venues.find_one(
@@ -720,3 +751,10 @@ async def match_finished(request: Request):
         pending_count += 1
 
     return {"status": "ok", "processed": True, "pending_actions_created": pending_count}
+
+
+@app.post("/admin/sync-scores")
+async def admin_sync_scores():
+    """Pull real WC2026 results from ESPN public API and update MongoDB scores."""
+    result = await sync_scores_from_espn()
+    return result

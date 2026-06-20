@@ -1,16 +1,25 @@
+function ls(): Storage | null {
+  try {
+    return window.localStorage
+  } catch {
+    return null
+  }
+}
+
 export function getSessionId(): string {
-  let id = localStorage.getItem("golazo_session_id")
+  const store = ls()
+  let id = store?.getItem("golazo_session_id") ?? null
   if (!id) {
     id = crypto.randomUUID()
-    localStorage.setItem("golazo_session_id", id)
+    try { store?.setItem("golazo_session_id", id) } catch { /* private mode */ }
   }
   return id
 }
 
 export function getFanId(): string | null {
-  return localStorage.getItem("golazo_fan_id")
+  return ls()?.getItem("golazo_fan_id") ?? null
 }
 
 export function setFanId(id: string): void {
-  localStorage.setItem("golazo_fan_id", id)
+  try { ls()?.setItem("golazo_fan_id", id) } catch { /* private mode */ }
 }

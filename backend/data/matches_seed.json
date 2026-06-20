@@ -13,7 +13,9 @@
     "country": "Mexico",
     "status": "completed",
     "atmosphere_score": 78,
-    "winner": null
+    "winner": "Mexico",
+    "score_a": 2,
+    "score_b": 1
   },
   {
     "match_id": "WC2026-002",
@@ -29,7 +31,9 @@
     "country": "Mexico",
     "status": "completed",
     "atmosphere_score": 78,
-    "winner": null
+    "winner": null,
+    "score_a": 0,
+    "score_b": 0
   },
   {
     "match_id": "WC2026-003",

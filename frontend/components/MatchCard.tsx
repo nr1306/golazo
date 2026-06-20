@@ -9,6 +9,10 @@ interface MatchCardProps {
   stadium: string
   atmosphereScore: number
   country: string
+  status?: string
+  scoreA?: number | null
+  scoreB?: number | null
+  winner?: string | null
 }
 
 function AtmosphereBar({ score }: { score: number }) {
@@ -33,22 +37,45 @@ function AtmosphereBar({ score }: { score: number }) {
 }
 
 export default function MatchCard({
-  matchNumber, stage, teamA, teamB, date, kickoffLocal, city, stadium, atmosphereScore, country,
+  matchNumber, stage, teamA, teamB, date, kickoffLocal, city, stadium,
+  atmosphereScore, country, status, scoreA, scoreB, winner,
 }: MatchCardProps) {
+  const isFinished = status === "completed" || status === "finished"
+  const hasScore = isFinished && scoreA !== null && scoreA !== undefined && scoreB !== null && scoreB !== undefined
+
   return (
     <div className="glass-elevated rounded-xl p-4 accent-border-green">
       <div className="flex justify-between items-start mb-3">
         <span className="text-[10px] font-mono text-pitch-green uppercase tracking-widest">
           {stage} · Match {matchNumber}
         </span>
-        <span className="text-[10px] font-mono text-on-surface/40 uppercase tracking-wider">{country}</span>
+        <div className="flex items-center gap-2">
+          {isFinished && (
+            <span className="text-[9px] font-mono text-energy-red uppercase tracking-widest">FT</span>
+          )}
+          <span className="text-[10px] font-mono text-on-surface/40 uppercase tracking-wider">{country}</span>
+        </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3 text-base font-display font-bold text-on-surface">
-        <span className="flex-1 text-right">{teamA}</span>
-        <span className="text-on-surface/30 text-xs font-mono font-normal px-2">VS</span>
-        <span className="flex-1 text-left">{teamB}</span>
+      <div className="flex items-center justify-between gap-3 font-display font-bold text-on-surface">
+        <span className={`flex-1 text-right text-base ${hasScore && winner === teamA ? "text-pitch-green" : ""}`}>
+          {teamA}
+        </span>
+        {hasScore ? (
+          <span className="text-xl font-black text-on-surface tabular-nums px-1">
+            {scoreA} <span className="text-on-surface/30">–</span> {scoreB}
+          </span>
+        ) : (
+          <span className="text-on-surface/30 text-xs font-mono font-normal px-2">VS</span>
+        )}
+        <span className={`flex-1 text-left text-base ${hasScore && winner === teamB ? "text-pitch-green" : ""}`}>
+          {teamB}
+        </span>
       </div>
+
+      {hasScore && !winner && (
+        <p className="text-center text-[9px] font-mono text-on-surface/30 uppercase tracking-widest mt-1">Draw</p>
+      )}
 
       <div className="mt-3 flex gap-4 text-xs font-mono text-on-surface/50">
         <span>{date}</span>
