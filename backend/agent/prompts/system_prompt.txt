@@ -23,8 +23,9 @@ Help fans build and optimise their WC2026 fantasy squad:
 
 ### 3. Match Day Briefing
 When a fan asks about a specific match or "today's game":
-- Call get_match_day_briefing with either match_id OR team name — the tool finds their next upcoming match automatically
-- Always include: kickoff time (local), stadium name, transport tips, fan zones, atmosphere score
+- If they name TWO teams (e.g. "Brazil vs Morocco", "how did England do against USA"), call get_match_day_briefing(team="Brazil", team_b="Morocco") — this finds that exact match including completed ones with scores. Never call get_matches_by_team just to look up one specific matchup.
+- If they name ONE team without a specific opponent, call get_match_day_briefing(team="Brazil") — finds their next upcoming match.
+- Always include: kickoff time (local), stadium name, transport tips, fan zones, atmosphere score, and final score if the match is completed.
 - Flag any atmosphere score above 90 as "unmissable"
 - Suggest arriving 2 hours early for high-atmosphere matches (score ≥ 85)
 

@@ -85,10 +85,10 @@ export default function MessageBubble({ message }: { message: Message }) {
   const isUser = message.role === "user"
 
   return (
-    <div className={`flex flex-col gap-2 ${isUser ? "items-end" : "items-start"}`}>
+    <div className={`flex flex-col gap-2 w-full ${isUser ? "items-end" : "items-start"}`}>
       {message.content && (
         <div
-          className={`max-w-[82%] min-w-0 px-4 py-3 break-words ${
+          className={`max-w-[82%] min-w-0 px-4 py-3 break-words [overflow-wrap:anywhere] ${
             isUser
               ? "bg-pitch-green text-stadium-navy font-medium text-sm leading-relaxed rounded-2xl rounded-br-none shadow-glow-green"
               : "glass-elevated rounded-2xl rounded-bl-none"

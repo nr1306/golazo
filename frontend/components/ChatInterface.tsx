@@ -140,7 +140,7 @@ export default function ChatInterface({ fanId, onFanIdChange, onMessageCountChan
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-5 space-y-4 min-w-0">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center pb-16">
             <div className="w-12 h-12 rounded-full bg-pitch-green/10 border border-pitch-green/20 flex items-center justify-center">

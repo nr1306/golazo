@@ -102,7 +102,9 @@ export default function MatchPageContent() {
   const match = detail?.match
   const isLoading = !suggestions || suggestions.status === "loading" || suggestions.status === "not_found"
   const scoreColor = match && match.atmosphere_score >= 80 ? "text-pitch-green" : match && match.atmosphere_score >= 60 ? "text-trophy-gold" : "text-on-surface/40"
-  const statusColor = match?.status === "finished" ? "text-energy-red" : match?.status === "live" ? "text-pitch-green animate-pulse" : "text-on-surface/30"
+  const statusColor = match?.status === "finished" || match?.status === "completed" ? "text-energy-red" : match?.status === "live" ? "text-pitch-green animate-pulse" : "text-on-surface/30"
+  const isFinished = match?.status === "completed" || match?.status === "finished"
+  const hasScore = isFinished && match?.score_a !== null && match?.score_a !== undefined && match?.score_b !== null && match?.score_b !== undefined
 
   const sortedHotels = suggestions?.hotels
     ? [...suggestions.hotels].sort((a, b) =>
@@ -135,7 +137,11 @@ export default function MatchPageContent() {
               <>
                 <h1 className="text-sm font-display font-black text-on-surface truncate">
                   {match.team_a}
-                  <span className="text-on-surface/25 font-normal text-xs mx-2">vs</span>
+                  {hasScore ? (
+                    <span className="text-pitch-green font-black tabular-nums mx-2">{match.score_a}–{match.score_b}</span>
+                  ) : (
+                    <span className="text-on-surface/25 font-normal text-xs mx-2">vs</span>
+                  )}
                   {match.team_b}
                 </h1>
                 <span className="hidden md:block text-[9px] font-mono text-on-surface/30 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded-full shrink-0">
@@ -205,6 +211,26 @@ export default function MatchPageContent() {
               →
             </div>
           </button>
+        )}
+
+        {/* Result banner for completed matches */}
+        {hasScore && match && (
+          <div className="glass-elevated rounded-xl px-6 py-4 mb-6 flex items-center justify-center gap-6 accent-border-green">
+            <span className={`text-lg font-display font-black ${match.winner === match.team_a ? "text-pitch-green" : "text-on-surface/60"}`}>
+              {match.team_a}
+            </span>
+            <div className="text-center">
+              <p className="text-3xl font-display font-black text-on-surface tabular-nums">
+                {match.score_a} <span className="text-on-surface/25">–</span> {match.score_b}
+              </p>
+              <p className="text-[9px] font-mono text-energy-red uppercase tracking-widest mt-1">
+                {match.winner ? `${match.winner} win` : "Draw"} · FT
+              </p>
+            </div>
+            <span className={`text-lg font-display font-black ${match.winner === match.team_b ? "text-pitch-green" : "text-on-surface/60"}`}>
+              {match.team_b}
+            </span>
+          </div>
         )}
 
         {/* Match facts strip */}

@@ -48,8 +48,10 @@ export default function MatchDetailPanel({ match, onClose, fanId }: MatchDetailP
     match.atmosphere_score >= 80 ? "text-pitch-green" :
     match.atmosphere_score >= 60 ? "text-trophy-gold" : "text-on-surface/40"
   const statusColor =
-    match.status === "finished" ? "text-energy-red" :
+    match.status === "finished" || match.status === "completed" ? "text-energy-red" :
     match.status === "live" ? "text-pitch-green animate-pulse" : "text-on-surface/30"
+  const isFinished = match.status === "completed" || match.status === "finished"
+  const hasScore = isFinished && match.score_a !== null && match.score_a !== undefined && match.score_b !== null && match.score_b !== undefined
 
   useEffect(() => {
     setDetail(null)
@@ -97,9 +99,18 @@ export default function MatchDetailPanel({ match, onClose, fanId }: MatchDetailP
             </p>
             <h2 className="text-base font-display font-black text-on-surface leading-tight">
               {match.team_a}
-              <span className="text-on-surface/25 font-normal text-xs mx-2">vs</span>
+              {hasScore ? (
+                <span className="text-pitch-green font-black tabular-nums mx-2">{match.score_a}–{match.score_b}</span>
+              ) : (
+                <span className="text-on-surface/25 font-normal text-xs mx-2">vs</span>
+              )}
               {match.team_b}
             </h2>
+            {hasScore && (
+              <p className="text-[9px] font-mono text-energy-red uppercase tracking-widest mt-1">
+                {match.winner ? `${match.winner} win` : "Draw"} · FT
+              </p>
+            )}
           </div>
           <button
             onClick={onClose}

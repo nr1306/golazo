@@ -67,14 +67,15 @@ async def find_matches_near_me(lat: float, lon: float, radius_km: int = 500) -> 
     return {"matches": matches, "nearby_cities": cities}
 
 
-async def get_match_day_briefing(match_id: str = "", team: str = "") -> dict:
-    """Full match-day briefing: fixture details, venue info, atmosphere score, fan zone tips.
+async def get_match_day_briefing(match_id: str = "", team: str = "", team_b: str = "") -> dict:
+    """Full match-day briefing: fixture details, score, venue info, atmosphere score, fan zone tips.
 
-    Pass either match_id OR team name. If team is given, finds their next upcoming match.
+    Pass match_id, or team + team_b for a specific matchup, or just team for their next upcoming match.
 
     Args:
-        match_id: The match identifier (e.g. "WC2026-001"). Optional if team is given.
-        team: Team name to find the next upcoming match for (e.g. "Brazil"). Optional if match_id is given.
+        match_id: The match identifier (e.g. "WC2026-001"). Optional.
+        team: First team name (e.g. "Brazil"). Optional.
+        team_b: Second team name for a specific matchup (e.g. "Morocco"). Pass alongside team.
 
     Returns:
         {"match": {...}, "venue": {...}, "atmosphere_score": int, "fan_zones": [...], "transport_tips": str}
@@ -85,21 +86,41 @@ async def get_match_day_briefing(match_id: str = "", team: str = "") -> dict:
     if match_id:
         match = await db.matches.find_one({"match_id": match_id}, {"_id": 0})
 
+    if not match and team and team_b:
+        # Specific matchup — search all statuses (handles completed matches too)
+        match = await db.matches.find_one(
+            {
+                "$or": [
+                    {
+                        "team_a": {"$regex": team, "$options": "i"},
+                        "team_b": {"$regex": team_b, "$options": "i"},
+                    },
+                    {
+                        "team_a": {"$regex": team_b, "$options": "i"},
+                        "team_b": {"$regex": team, "$options": "i"},
+                    },
+                ]
+            },
+            {"_id": 0},
+            sort=[("date", -1)],
+        )
+
     if not match and team:
+        # Single team — find next upcoming match
         match = await db.matches.find_one(
             {
                 "$or": [
                     {"team_a": {"$regex": team, "$options": "i"}},
                     {"team_b": {"$regex": team, "$options": "i"}},
                 ],
-                "status": {"$in": ["upcoming", "live"]},
+                "status": {"$in": ["upcoming", "scheduled", "live"]},
             },
             {"_id": 0},
             sort=[("date", 1)],
         )
 
     if not match:
-        return {"error": f"No upcoming match found for {'match_id=' + match_id if match_id else 'team=' + team}"}
+        return {"error": f"No match found for {'match_id=' + match_id if match_id else team + (' vs ' + team_b if team_b else '')}"}
 
     venue = await db.venues.find_one(
         {"city": {"$regex": match.get("city", ""), "$options": "i"}},
