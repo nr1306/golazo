@@ -29,13 +29,16 @@ function getSpotlight(step: number, isMobile: boolean, vw: number, vh: number): 
     switch (step) {
       case 0: return { top: 72, left: 0, width: vw, height: vh - 72 - 64 - 100 }
       case 1: return { top: vh - 64, left: 0, width: vw, height: 64 }
-      case 2: return { top: vh - 152, left: vw - 92, width: 56, height: 56 }
+      // FAB: mobile bottom-20 right-6 = 80px bottom, 24px right, w-14 h-14 = 56px
+      case 2: return { top: vh - 136, left: vw - 80, width: 56, height: 56 }
     }
   } else {
     switch (step) {
-      case 0: return { top: 0, left: 64, width: vw - 64 - 288, height: vh }
-      case 1: return { top: 0, left: 0, width: 64, height: vh }
-      case 2: return { top: vh - 92, left: vw - 92, width: 56, height: 56 }
+      // NavSidebar = w-[200px], RightPanel = w-72 (288px)
+      case 0: return { top: 0, left: 200, width: vw - 200 - 288, height: vh }
+      case 1: return { top: 0, left: 0, width: 200, height: vh }
+      // FAB: desktop bottom-6 right-6 = 24px, w-14 h-14 = 56px
+      case 2: return { top: vh - 80, left: vw - 80, width: 56, height: 56 }
     }
   }
   return { top: 0, left: 0, width: vw, height: vh }
@@ -51,7 +54,7 @@ function getTooltipStyle(step: number, isMobile: boolean, spot: Rect): CSSProper
   } else {
     switch (step) {
       case 0: return { top: "50%", right: 0, transform: "translateY(-50%)" }
-      case 1: return { top: "50%", left: 80, transform: "translateY(-50%)" }
+      case 1: return { top: "50%", left: 216, transform: "translateY(-50%)" }
       case 2: return { bottom: 96, right: 16 }
     }
   }
