@@ -99,9 +99,9 @@ class ProposeActionRequest(BaseModel):
 # ---------- card emission rules ----------
 _CARD_TOOLS: dict[str, str] = {
     "get_match_day_briefing": "match",
-    "get_matches_by_team": "matches",
-    "get_matches_by_city": "matches",
-    "find_matches_near_me": "matches",
+    # get_matches_by_team / get_matches_by_city / find_matches_near_me intentionally
+    # excluded — agents use them internally to look up data, but emitting a card for
+    # every internal lookup floods the chat. Cards only appear for explicit briefings.
     "get_trip_itinerary": "trip",
     "save_trip_itinerary": "trip",
     "get_crowd_insights": "crowd",
